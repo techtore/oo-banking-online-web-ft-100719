@@ -1,6 +1,7 @@
 require 'pry'
 class Transfer
   attr_accessor :sender, :receiver, :amount, :status
+  @@TRANSACTION_HISTORY = []
 
   def initialize(sender, receiver, amount)
     @sender = sender
@@ -19,6 +20,7 @@ class Transfer
 
   def execute_transaction
     if valid? && sender.balance > amount && status = "pending"
+      @@TRANSACTION_HISTORY << amount
       sender.balance -= amount
       receiver.balance += amount
       self.status = "complete"
@@ -28,6 +30,11 @@ class Transfer
     end
     
   end
-  # status
+  
+  def reverse_transfer
+    if status == "complete" 
+    end
+  end
+ 
 end
 
