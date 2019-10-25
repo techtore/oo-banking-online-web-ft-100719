@@ -33,6 +33,10 @@ class Transfer
   
   def reverse_transfer
     if status == "complete" 
+      sender.deposit(@@TRANSACTION_HISTORY.last)
+      receiver.balance -= @@TRANSACTION_HISTORY.last 
+      @@TRANSACTION_HISTORY.delete(@@TRANSACTION_HISTORY.last)
+      status = "reversed"
     end
   end
  
