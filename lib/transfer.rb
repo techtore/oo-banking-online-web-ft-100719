@@ -1,6 +1,7 @@
 require 'pry'
 class Transfer
   attr_accessor :sender, :receiver, :amount, :status
+  @@TRANSACTION_HISTORY = []
 
   def initialize(sender, receiver, amount)
     @sender = sender
@@ -10,7 +11,7 @@ class Transfer
   end
 
   def valid?
-    if @sender.valid? && @receiver.valid?
+    if sender.valid? && receiver.valid?
       true 
     else
       false
@@ -18,15 +19,31 @@ class Transfer
   end
 
   def execute_transaction
-    if @sender.balance > @amount && @status = "pending"
-      @sender.balance -= @amount 
-      @receiver.deposit(@amount)
-      @status = "complete"
+    if valid? && sender.balance > amount && status = "pending"
+      @@TRANSACTION_HISTORY << amount
+      sender.balance -= amount
+      receiver.balance += amount
+      self.status = "complete"
     else 
-      @status = "rejected"
-      return "Transaction rejected. Please check your account balance."
-       
+      self.status = "rejected"
+       "Transaction rejected. Please check your account balance."
+    end
+    
+  end
+  
+  def reverse_transfer
+    if valid? && receiver.balance > amount && self.status == "complete" 
+       receiver.balance -= amount
+       sender.balance += amount
+       self.status = "reversed"
+    else 
+      self.status = "rejected"
+      "Transaction rejected. Please check your account balance."
     end
   end
 end
+
+      # sender.deposit(@@TRANSACTION_HISTORY.last)
+      # receiver.balance -= @@TRANSACTION_HISTORY.last 
+      # @@TRANSACTION_HISTORY.delete(@@TRANSACTION_HISTORY.last)
 
