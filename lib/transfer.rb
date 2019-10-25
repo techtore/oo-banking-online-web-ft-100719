@@ -20,7 +20,7 @@ class Transfer
   def execute_transaction
     if valid? && @sender.balance > @amount && @status = "pending"
       @sender.balance -= @amount
-      @receiver.balance += @ammount
+      @receiver.balance += @amount
       @status == "complete"
     else 
       @status = "rejected"
